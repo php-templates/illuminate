@@ -1,0 +1,22 @@
+{
+    "name": "php-templates/illuminate",
+    "license": "MIT",
+    "description": "Php templating engine Laravel service provider",
+    "keywords": ["php", "templates"],
+    "homepage": "https://github.com/php-templates/illuminate",
+    "authors": [
+        {
+            "name": "Florin Botea",
+            "homepage": "https://github.com/florin-botea",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "PhpTemplates\\illuminate\\": "src/"
+        }
+    },
+    "require": {
+        "php-templates/php-templates": "^1.0"
+    }
+}
