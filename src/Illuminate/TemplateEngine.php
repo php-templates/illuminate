@@ -4,7 +4,7 @@ namespace PhpTemplates\Illuminate;
 
 use PhpTemplates\Template;
 
-class ViewFactory implements \Illuminate\Contracts\View\Engine
+class TemplateEngine implements \Illuminate\Contracts\View\Engine
 {
     private $shared = [];
     private $template;
@@ -38,10 +38,14 @@ class ViewFactory implements \Illuminate\Contracts\View\Engine
             $rfilepath = $config->getName() . ':' . $rfilepath;
         }
         
+        //$s = microtime(true);
         ob_start();
+        //try {
         $this->template->render($rfilepath, $data);
+        //} catch(\Exception $e) {}
         $output = ob_get_contents();
         ob_end_clean();
+        //dump(microtime(true) - $s);
         
         return $output;
     }

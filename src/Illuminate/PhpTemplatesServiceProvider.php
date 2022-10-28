@@ -14,22 +14,21 @@ class PhpTemplatesServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton('phpt.view', function($app) {
+        $this->app->singleton('phpt', function() {
             $cfg = new Config('default', config('view.paths'));
             $eventHolder = new EventHolder();
-            $template = new Template(config('view.compiled'), $cfg, $eventHolder);            
-            
-            return new ViewFactory($template);
+            $template = new Template(config('view.compiled'), $cfg, $eventHolder);
+            return $template;
         });
     }    
     
     public function boot(): void
     {
-        //dd($this->app['view']);
         $this->app['view']->addExtension('t.php', 'phpt', function () {
             // @codeCoverageIgnoreStart
-            return $this->app->make('phpt.view');
+            $template = $this->app->make('phpt');
+            $template->share($this->app['view']->getShared());
+            return new TemplateEngine($template);
         });
-        //dd($this->app['view.finder']);
     }
 }
