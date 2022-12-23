@@ -34,18 +34,22 @@ class TemplateEngine implements \Illuminate\Contracts\View\Engine
             }
         }
         
+        if (!$rfilepath) {
+            throw new \Exception("Source path '$path' is not present in any config");
+        }
+        
         if (!$config->isDefault()) {
             $rfilepath = $config->getName() . ':' . $rfilepath;
         }
         
-        //$s = microtime(true);
+        $s = microtime(true);
         ob_start();
         //try {
         $this->template->render($rfilepath, $data);
         //} catch(\Exception $e) {}
         $output = ob_get_contents();
         ob_end_clean();
-        //dump(microtime(true) - $s);
+        $output = (microtime(true) - $s) .'<br>'. $output;
         
         return $output;
     }
