@@ -19,14 +19,10 @@ class PhpTemplatesServiceProvider extends ServiceProvider
         );        
         
         $this->app->singleton('phpt', function() {
-            $cfg = new Config('default', config('phpt.src_path'));
-            // register config aliased
-            $cfg->setAlias(config('phpt.aliases', []));
-            
-            $eventHolder = new EventHolder();
-            $template = new Template(config('phpt.cache_path'), $cfg, $eventHolder, [
+            $template = new Template(config('phpt.src_path'), config('phpt.cache_path'), [
                 'debug' => config('phpt.debug')
             ]);
+            $template->setAlias(config('phpt.aliases', []));
            
             return $template;
         });
