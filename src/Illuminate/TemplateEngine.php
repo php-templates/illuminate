@@ -22,7 +22,7 @@ class TemplateEngine implements \Illuminate\Contracts\View\Engine
      * @return string
      */
     public function get($path, array $data = []) 
-    {
+    {dump(session()->increment('aaa'));
         $config = $this->template->getConfig()->getConfigFromPath($path);
         $rfilepath = '';
         foreach ($config->getPath() as $p) {
