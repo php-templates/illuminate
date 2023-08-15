@@ -17,6 +17,6 @@
         }
     },
     "require": {
-        "php-templates/php-templates": "^1.0"
+        "php-templates/php-templates": "^2.0"
     }
 }
