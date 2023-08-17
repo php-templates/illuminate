@@ -3,9 +3,9 @@
 namespace PhpTemplates\Illuminate;
 
 use Illuminate\Support\ServiceProvider;
-use PhpTemplates\Template;
+use PhpTemplates\PhpTemplates;
 use PhpTemplates\Config;
-use PhpTemplates\EventHolder;
+use PhpTemplates\EventDispatcher;
 
 class PhpTemplatesServiceProvider extends ServiceProvider
 {
@@ -19,13 +19,15 @@ class PhpTemplatesServiceProvider extends ServiceProvider
         );        
         
         $this->app->singleton('phpt', function() {
-            $template = new Template(config('phpt.src_path'), config('phpt.cache_path'), [
-                'debug' => config('phpt.debug')
+            $template = new PhpTemplates(config('phpt.src_path'), config('phpt.cache_path'), new EventDispatcher(), [
+                'debug' => config('phpt.debug'),
+                'aliases' => config('phpt.aliases', []),
             ]);
-            $template->setAlias(config('phpt.aliases', []));
-           
+
             return $template;
         });
+        
+        $this->extendViewFactory();
     }    
     
     public function boot(): void
@@ -41,5 +43,31 @@ class PhpTemplatesServiceProvider extends ServiceProvider
            
             return new TemplateEngine($template);
         });
+    }
+    
+    private function extendViewFactory() 
+    {
+        $resolver = $this->app['view']->getEngineResolver();
+        $finder = $this->app['view']->getFinder();
+
+        $this->app->singleton('view', function ($app) use ($resolver, $finder) {
+            // Next we need to grab the engine resolver instance that will be used by the
+            // environment. The resolver will be used by an environment to get each of
+            // the various engine implementations such as plain PHP or Blade engine.
+            $factory = new Factory($resolver, $finder, $app['events']);
+
+            // We will also set the container instance on this view environment since the
+            // view composers may be classes registered in the container, which allows
+            // for great testable, flexible composers for the application developer.
+            $factory->setContainer($app);
+
+            $factory->share('app', $app);
+
+            $app->terminating(static function () {
+                \Illuminate\View\Component::forgetFactory();
+            });
+
+            return $factory;
+        });        
     }
 }
