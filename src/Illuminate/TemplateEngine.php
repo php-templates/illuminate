@@ -29,19 +29,28 @@ class TemplateEngine implements \Illuminate\Contracts\View\Engine
             try {
                 $config = $config->find($cfgKey);
             } catch(\Exception $e) {
-                $name = str_replace(':', '_', $name);
+                $name = str_replace(':', '__', $name);
             }
         }
-        
+
         $s = microtime(true);
+        $template = $this->template->fromFile($path, $data, [], $config, $name);
         ob_start();
-        //try {
-        $this->template->fromFile($path, $data, [], $config, $name);
-        //} catch(\Exception $e) {}
+        try {
+            $template->render();
+        } catch(\Exception $e) {
+            ob_end_clean();
+            throw $e;
+        }
+        
         $output = ob_get_contents();
         ob_end_clean();
-        $output = (microtime(true) - $s) .'<br>'. $output;
-        
+        dump(microtime(true) - $s);
+
         return $output;
     }
+}
+
+function xxx() {
+    ?>aaaaa<?php
 }
