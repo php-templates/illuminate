@@ -27,6 +27,10 @@ class PhpTemplatesServiceProvider extends ServiceProvider
             return $template;
         });
         
+        $this->app->bind(PhpTemplates::class, function($app) {
+            return $app['phpt'];
+        });
+        
         $this->extendViewFactory();
     }    
     
