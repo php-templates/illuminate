@@ -45,7 +45,7 @@ class TemplateEngine implements \Illuminate\Contracts\View\Engine
         
         $output = ob_get_contents();
         ob_end_clean();
-        dump(microtime(true) - $s);
+        //dump(microtime(true) - $s);
 
         return $output;
     }

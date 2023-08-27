@@ -14,9 +14,15 @@ class PhpTemplatesServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(
-            __DIR__.'/../config/phpt.php', 'phpt'
-        );        
+        if (file_exists(config_path('phpt.php'))) {
+            $this->mergeConfigFrom(
+                config_path('phpt.php'), 'phpt'
+            );
+        } else {
+            $this->mergeConfigFrom(
+                __DIR__.'/../config/phpt.php', 'phpt'
+            );
+        }
         
         $this->app->singleton('phpt', function() {
             $template = new PhpTemplates(config('phpt.src_path'), config('phpt.cache_path'), new EventDispatcher(), [
