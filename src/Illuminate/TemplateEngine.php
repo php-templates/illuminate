@@ -23,7 +23,7 @@ class TemplateEngine implements \Illuminate\Contracts\View\Engine
      */
     public function get($path, array $data = [], $name = null) 
     {
-        $config = $this->template->getConfig();
+        $config = $this->template->config();
         if ($name && strpos($name, ':')) {
             [$cfgKey, $tmp] = explode(':', $name);
             try {
@@ -34,7 +34,7 @@ class TemplateEngine implements \Illuminate\Contracts\View\Engine
         }
 
         $s = microtime(true);
-        $template = $this->template->fromFile($path, $data, [], $config, $name);
+        $template = $this->template->fromPath(str_replace('.', '/', $name), $data, [], $config, $name);
         ob_start();
         try {
             $template->render();
