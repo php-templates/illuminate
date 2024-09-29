@@ -50,7 +50,3 @@ class TemplateEngine implements \Illuminate\Contracts\View\Engine
         return $output;
     }
 }
-
-function xxx() {
-    ?>aaaaa<?php
-}
